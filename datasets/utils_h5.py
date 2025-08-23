@@ -2,10 +2,16 @@ import h5py
 import os
 import numpy as np
 
-class DatasetHDF5:
+class H5DatasetBuilder:
     """
-    Store a graph dataset in an HDF5 file.
+    Helps to create and manage an HDF5 file for storing graph datasets.
     The file is organized as follows:
+    - attributes:
+        - n_max_nodes: int - maximum number of nodes in any graph
+        - n_node_labels: int - number of node labels
+        - n_edge_labels: int - number of edge labels
+        - padding_value: str - value used for padding (e.g. "nan")
+        - chunk_size_storage: int - chunk size for HDF5 storage
     - train: 
         - node_labels: (n_mols_train, n_max_nodes) - labels of nodes in the graph
         - edge_labels: (n_mols_train, n_max_nodes, n_max_nodes) - labels of edges in the graph
@@ -26,14 +32,22 @@ class DatasetHDF5:
         if not os.path.exists(path_h5):
             raise FileNotFoundError(f"HDF5 file {path_h5} does not exist. Please create it first.")
         
-        # Load config
+        # Load attributes
         with h5py.File(path_h5, 'r') as f:
             self.n_max_nodes = f.attrs['n_max_nodes']
             self.padding_value = f.attrs['padding_value']
             self.chunk_size_storage = f.attrs['chunk_size_storage']
-
+            self.n_node_labels = len(f.attrs['node_labels'])
+            self.n_edge_labels = len(f.attrs['edge_labels'])
+        
     @classmethod
-    def create(cls, path_h5: str, n_max_nodes: int, padding_value: str = "nan", chunk_size_storage: int = 100000, overwrite: bool = False):
+    def create(cls, path_h5: str, 
+               n_max_nodes: int, 
+               node_labels: int, 
+               edge_labels: int, # Including "no edge" label
+               padding_value: str = "nan", 
+               chunk_size_storage: int = 100000, 
+               overwrite: bool = False):
         """
         Create a new HDF5 file to store the dataset.
         """
@@ -49,7 +63,9 @@ class DatasetHDF5:
             f.attrs['n_max_nodes'] = n_max_nodes
             f.attrs['padding_value'] = padding_value
             f.attrs['chunk_size_storage'] = chunk_size_storage
-            
+            f.attrs['node_labels'] = np.array(node_labels, dtype='S')
+            f.attrs['edge_labels'] = np.array(edge_labels, dtype='S')
+
         file = cls(path_h5)
         with h5py.File(path_h5, 'a') as f:
             file.init_split(f, 'train')

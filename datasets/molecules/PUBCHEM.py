@@ -10,7 +10,7 @@ from multiprocessing import cpu_count
 from tqdm import tqdm
 import subprocess
 from .utils import smiles2graph
-from datasets.utils_h5 import DatasetHDF5
+from datasets.utils_h5 import H5DatasetBuilder
 import numpy as np
 from sklearn.model_selection import train_test_split
 
@@ -55,7 +55,11 @@ def process_PUBCHEM(config, dev=False):
     
     # Create HDF5 file
     path_h5 = "data/h5/PUBCHEM_" + config['id'] + ".h5"
-    dataset = DatasetHDF5.create(path_h5, n_max_nodes=n_max_nodes, overwrite=True)
+    dataset = H5DatasetBuilder.create(path_h5, 
+                                      n_max_nodes=n_max_nodes, 
+                                      node_labels=valid_atomic_nums,
+                                      edge_labels=valid_bond_types, # Including "no edge" label
+                                      overwrite=True)
 
     # Get chunks of smiles
     csv_path = "data/raw/PUBCHEM.csv" if not dev else "data/raw/PUBCHEM_dev.csv"
