@@ -100,7 +100,7 @@ class EvoformerGraphEncoder(AbstractGraphEncoder):
         
     def nodes_and_edges_embedding(self, data):
         node_labels = data.nodes.labels
-        node_pos = self.positionnal_nodes(data.edges.adjacency)
+        node_pos = self.positionnal_nodes(data.edges.adjacency).to(node_labels.dtype)
         X = torch.concat([node_labels, node_pos], dim=-1)
         E1 = build_E_from_X(X)
         E2 = data.edges.labels
@@ -127,5 +127,8 @@ class EvoformerGraphEncoder(AbstractGraphEncoder):
         graph_embedding = self.TransformerDecoder(X_src=Z, mask_src=mask_Z)
         return node_embeddings, graph_embedding
 
+import inspect
 def get_encoder(config):
-    return ...
+    params = inspect.signature(EvoformerGraphEncoder).parameters
+    valid_args = {k: v for k, v in config.items() if k in params}
+    return EvoformerGraphEncoder(**valid_args)

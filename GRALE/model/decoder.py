@@ -114,5 +114,8 @@ class EvoformerGraphDecoder(AbstractGraphDecoder):
         
         return node_embeddings, outputs
     
+import inspect
 def get_decoder(config):
-    return ...
+    params = inspect.signature(EvoformerGraphDecoder).parameters
+    valid_args = {k: v for k, v in config.items() if k in params}
+    return EvoformerGraphDecoder(**valid_args)

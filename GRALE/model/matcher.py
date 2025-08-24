@@ -98,5 +98,8 @@ class SinkhornMatcher(nn.Module):
             P, log_P, log_solver = batched_log_sinkhorn_projection(log_K,max_iter=self.max_iter,tol=self.tol, last_iter_grad = self.last_iter_grad, fixed_n_iters = self.fixed_n_iters)
             return P, log_solver
 
+import inspect
 def get_matcher(config):
-    return ...
+    params = inspect.signature(SinkhornMatcher).parameters
+    valid_args = {k: v for k, v in config.items() if k in params}
+    return SinkhornMatcher(**valid_args)

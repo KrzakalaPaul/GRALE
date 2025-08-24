@@ -1,9 +1,6 @@
 import torch.nn as nn
 import torch
-from GRALE.model.utils import BatchedDenseData
-from torch.utils.data import DataLoader
-from .utils import update_running_average
-import pickle
+from GRALE.data import BatchedDenseData
 
 class AbstractTargetBuilder(nn.Module):
     '''
@@ -73,4 +70,4 @@ class DiffusionTargetBuilder(AbstractTargetBuilder):
         return targets
 
 def get_target_builder(config):
-    return ...
+    return DiffusionTargetBuilder()

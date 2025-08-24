@@ -50,6 +50,7 @@ class MaskingInputBuilder(AbstractInputBuilder):
     
     def __init__(self, n_nodes_max, node_masking_ratio=0.1):
         super(MaskingInputBuilder, self).__init__(n_nodes_max)
+        self.node_masking_ratio = node_masking_ratio
         
     def forward(self, data: BatchedDenseData):
         
@@ -84,4 +85,4 @@ class MaskingInputBuilder(AbstractInputBuilder):
         return data
     
 def get_input_builder(config):
-    return ...
+    return BasicInputBuilder(config['n_nodes_max'])

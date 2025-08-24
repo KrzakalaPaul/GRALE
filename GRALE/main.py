@@ -6,7 +6,7 @@ from .model import get_encoder, get_decoder, get_matcher, get_target_builder, ge
 from GRALE.data import BatchedDenseData
 import pytorch_lightning as pl
     
-class GRALE(pl.LightningModule):
+class GRALE_model(pl.LightningModule):
     
     def __init__(self, config: dict):
         super().__init__()
@@ -38,7 +38,7 @@ class GRALE(pl.LightningModule):
         loss, log_loss = self.training_objective(outputs, targets, permutation_matrices)
 
         # Log metrics
-        pass
+        self.log_dict(log_loss, on_epoch=True, batch_size=inputs.batchsize)
     
     def validation_step(self, batch: BatchedDenseData):
         
@@ -62,8 +62,8 @@ class GRALE(pl.LightningModule):
         metric, log_metric = self.validation_metric(self.format_logits(aligned_outputs), targets, permutation_matrices=None)
 
         # Log metrics
-        pass
-    
+        self.log_dict(log_metric, on_epoch=True, batch_size=inputs.batchsize)
+
     def encode(self, data: BatchedDenseData):
         '''
         Returns only the graph embedding from the encoder
