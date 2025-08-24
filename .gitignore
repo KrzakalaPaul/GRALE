@@ -1,2 +1,5 @@
 data/
 *.pyc
+lightning_logs
+logs
+wandb
