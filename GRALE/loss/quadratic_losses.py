@@ -200,7 +200,7 @@ class QuadraticAccuracy(QuadraticLoss):
     
 class QuadraticBinaryAccuracy(QuadraticAccuracy):
     '''
-    L(a,b) = 1[ (a>0.5) == b ]
+    L(a,b) = 1[ (a>0.5) != b ]
     Can be computed by first defining A = [a, 1-a] and B = [b, 1-b] then
     L(a,b) = Accuracy(A,B)
     '''

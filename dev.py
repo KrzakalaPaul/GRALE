@@ -1,3 +1,23 @@
+import torch
+from GRALE.model.utils import build_laplacian_node_pos, build_random_node_pos
+from GRALE.data.dataset import DataModule
+from time import perf_counter
+
+path_h5 = 'data/h5/PUBCHEM_dev.h5'
+datamodule = DataModule(path_h5=path_h5, batch_size=128, n_data_epoch=100000, n_data_valid=500)
+start = perf_counter()
+n_batches = 0
+for inputs in datamodule.train_dataloader():
+    A = inputs.edges.adjacency.to('cuda')
+    pos = build_laplacian_node_pos(A, n_eigvecs=5)
+    n_batches += 1
+    if n_batches >= 1000:
+        break
+end = perf_counter()
+print(f'Time/batch: {(end - start)/n_batches} seconds')
+
+
+"""
 from GRALE.utils.dataset import MyDataModule
 import pytorch_lightning as pl
 import torch.nn as nn
@@ -36,4 +56,4 @@ model = LitModel(n_node_labels=datamodule.metadata['n_node_labels'])
 
 trainer = pl.Trainer(max_epochs=5, accelerator='cuda', devices=1, reload_dataloaders_every_n_epochs=1)
 
-trainer.fit(model, datamodule=datamodule)
+trainer.fit(model, datamodule=datamodule)"""

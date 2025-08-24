@@ -128,3 +128,13 @@ def build_random_node_pos(batchsize, n_nodes_batch, n_nodes_max):
     x = x[:, :n_nodes_batch]
     x = torch.nn.functional.one_hot(x, n_nodes_max)
     return x
+
+
+def build_laplacian_node_pos(A, n_eigvecs):
+    '''
+    A: torch.Tensor of shape (batchsize, n_nodes_batch, n_nodes_batch)
+    '''
+    D = A.sum(dim=-1)
+    L = torch.diag_embed(D) - A
+    eigvals, eigvecs = torch.linalg.eigh(L.to(float))
+    return eigvecs[:, :, 1:n_eigvecs+1] 
