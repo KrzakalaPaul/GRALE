@@ -43,7 +43,7 @@ class DiffusionTargetBuilder(AbstractTargetBuilder):
         A = data.edges.adjacency
         N = A.sum(dim=-1, keepdim=True) # Number of neighbors
         F = data.nodes.labels
-        node_features = torch.einsum('bij,bjd->bid', A, F) / (N.unsqueeze(-1) + 1e-6) 
+        node_features = torch.einsum('bij,bjd->bid', A, F) / (N + 1e-6) 
         return node_features
     
     def get_edge_features(self, data: BatchedDenseData):

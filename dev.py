@@ -1,27 +1,28 @@
+import torch.nn as nn
+from torch.optim.lr_scheduler import LambdaLR
 import torch
-from GRALE.model.utils import build_laplacian_node_pos, build_random_node_pos
-from GRALE.data.dataset import DataModule
-from GRALE.main import GRALE_model
-from time import perf_counter
-import yaml
+import numpy as np
 
-# Load model
-config = yaml.safe_load(open('GRALE/configs/dev.yaml', 'r'))
-model = GRALE_model(config=config)
-model.to('cuda')
+model = nn.Linear(10,10)
+warmup_steps = 1000
+total_steps = 10000
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)  
 
-# Load data
-path_h5 = 'data/h5/PUBCHEM_dev.h5'
-datamodule = DataModule(path_h5=path_h5, batch_size=16, n_data_epoch=1000, n_data_valid=100)
+def lr_lambda(step):
+    if step < warmup_steps:
+        return float(step) / float(max(1, warmup_steps))
+    # cosine annealing after warmup
+    progress = float(step - warmup_steps) / float(max(1, total_steps - warmup_steps))
+    return 0.5 * (1.0 + np.cos(np.pi * progress))
 
-# Test forward pass
-start_time = perf_counter()
-batch_count = 0
-for inputs in datamodule.train_dataloader():
-    inputs = inputs.to('cuda')
-    outputs = model(inputs)
-    batch_count += 1
-    if batch_count >= 100:
-        break
-end_time = perf_counter()
-print(f"{(end_time - start_time)/batch_count:.2f} seconds/batch.")
+scheduler = LambdaLR(optimizer, lr_lambda)
+
+import matplotlib.pyplot as plt
+lrs = []
+for step in range(total_steps):
+    optimizer.step()
+    lrs.append(optimizer.param_groups[0]["lr"])
+    scheduler.step()
+    
+plt.plot(lrs)
+plt.show()

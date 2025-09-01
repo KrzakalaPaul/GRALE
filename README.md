@@ -1,8 +1,10 @@
 # TO DO LIST:
 
-- Add Trainer []
-- Add lr scheduling and gradient clipping []
-- Make a nice train.py []
+- Add Trainer [x]
+- Add lr scheduling and gradient clipping [x]
+- Make a nice train.py [x]
+- Run local
+- Run cluser []
 - Add mixed-precision option []
 - Add multi-gpu []
 - Add requirement.txt

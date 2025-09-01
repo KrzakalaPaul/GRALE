@@ -5,7 +5,9 @@ from .loss.objective import GraphAutoencoderObjective, GraphAutoencoderMetric
 from .model import get_encoder, get_decoder, get_matcher, get_target_builder, get_input_builder
 from GRALE.data import BatchedDenseData
 import pytorch_lightning as pl
-    
+from torch.optim.lr_scheduler import LambdaLR
+import numpy as np
+
 class GRALE_model(pl.LightningModule):
     
     def __init__(self, config: dict):
@@ -16,9 +18,9 @@ class GRALE_model(pl.LightningModule):
         self.target_builder = get_target_builder(config)
         self.input_builder = get_input_builder(config)
         self.n_nodes_max = config['n_nodes_max']
-        self.config = config
         self.training_objective = GraphAutoencoderObjective(get_alpha(config))
         self.validation_metric = GraphAutoencoderMetric()
+        self.save_hyperparameters(config)
         
     def training_step(self, batch: BatchedDenseData):
         
@@ -39,6 +41,8 @@ class GRALE_model(pl.LightningModule):
 
         # Log metrics
         self.log_dict(log_loss, on_epoch=True, batch_size=inputs.batchsize)
+        lr = self.trainer.optimizers[0].param_groups[0]['lr']
+        self.log("lr", lr, prog_bar=False, on_step=True, on_epoch=False)
     
     def validation_step(self, batch: BatchedDenseData):
         
@@ -131,6 +135,27 @@ class GRALE_model(pl.LightningModule):
             else:
                 return outputs, permutation_matrices
         return outputs
+    
+    def configure_optimizers(self):
+        optimizer = torch.optim.AdamW(self.parameters(), lr=self.hparams["base_lr"])
+
+        warmup_steps = self.hparams.n_warmup_steps
+        total_steps = self.hparams.n_grad_steps
+
+        def lr_lambda(step):
+            if step < warmup_steps:
+                return float(step) / float(max(1, warmup_steps))
+            # cosine annealing after warmup
+            progress = float(step - warmup_steps) / float(max(1, total_steps - warmup_steps))
+            return 0.5 * (1.0 + np.cos(np.pi * progress))
+
+        scheduler = {
+            "scheduler": LambdaLR(optimizer, lr_lambda),
+            "interval": "step",     # update per step
+            "frequency": 1
+        }
+
+        return [optimizer], [scheduler]
 
 def get_alpha(config):
     return {'h': config['alpha_h'], 
@@ -140,3 +165,5 @@ def get_alpha(config):
             'edge_labels': config['alpha_edge_labels'], 
             'adjacency': config['alpha_adjacency'], 
             'marginals': config['alpha_marginals']}
+    
+    

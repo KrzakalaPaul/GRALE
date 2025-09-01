@@ -47,10 +47,8 @@ class SinkhornMatcher(nn.Module):
                  node_model_dim,
                  matcher_dim,
                  n_nodes_max,
-                 add_positionnal_outputs = True,
                  max_iter_sinkhorn = 100,
-                 tol_sinkhorn = 1e-5,
-                 last_iter_grad_sinkhorn = False,
+                 tol_sinkhorn = 1e-3,
                  fixed_n_iters_sinkhorn = False,
                  normalize_cost_matrix = True,
                  epsilon = 1e-4
@@ -64,11 +62,9 @@ class SinkhornMatcher(nn.Module):
         nn.init.xavier_uniform_(self.positionnal_encoding_outputs)
         self.linear_inputs = nn.Linear(node_model_dim,matcher_dim)
         self.linear_outputs = nn.Linear(node_model_dim,matcher_dim)
-        
-        self.add_positionnal_outputs = add_positionnal_outputs
+    
         self.max_iter = max_iter_sinkhorn
         self.tol = tol_sinkhorn
-        self.last_iter_grad = last_iter_grad_sinkhorn
         self.fixed_n_iters = fixed_n_iters_sinkhorn
         self.normalize_cost_matrix = normalize_cost_matrix
         self.epsilon = epsilon
@@ -82,8 +78,7 @@ class SinkhornMatcher(nn.Module):
         mask = node_masks_inputs.unsqueeze(-1)
         node_embeddings_inputs = (~mask)*node_embeddings_inputs + mask*padding
         # Add positionnal encoding to outputs
-        if self.add_positionnal_outputs:
-            node_embeddings_outputs = node_embeddings_outputs + self.positionnal_encoding_outputs
+        node_embeddings_outputs = node_embeddings_outputs + self.positionnal_encoding_outputs
         # Compute affinity
         a = self.linear_outputs(node_embeddings_outputs)
         b = self.linear_inputs(node_embeddings_inputs)
@@ -95,7 +90,7 @@ class SinkhornMatcher(nn.Module):
         if hard:
             return batched_hungarian_projection(log_K, metric='F')
         else:
-            P, log_P, log_solver = batched_log_sinkhorn_projection(log_K,max_iter=self.max_iter,tol=self.tol, last_iter_grad = self.last_iter_grad, fixed_n_iters = self.fixed_n_iters)
+            P, log_P, log_solver = batched_log_sinkhorn_projection(log_K,max_iter=self.max_iter,tol=self.tol, fixed_n_iters = self.fixed_n_iters)
             return P, log_solver
 
 import inspect
