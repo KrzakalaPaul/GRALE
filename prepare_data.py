@@ -9,10 +9,12 @@ def main():
     # Download datasets
     download_PUBCHEM()
 
-    # Load configuration
     config = json.load(open("datasets/molecules/configs/dev.json"))
-    
     process_PUBCHEM(config, dev=True)
+    
+    config = json.load(open("datasets/molecules/configs/16.json"))
+    process_PUBCHEM(config, dev=False)
+    
     
 
 if __name__ == "__main__":

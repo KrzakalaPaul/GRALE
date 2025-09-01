@@ -1,7 +1,7 @@
 {
     "id": "32",
     "valid_size": 10000,
-    "n_max_nodes": 16,
+    "n_max_nodes": 32,
     "chunk_size_preprocessing": 1000000,
     "valid_atomic_nums": [6, 8, 7, 17, 16, 9, 35, 15, 53, 14, 11, 33, 80, 50, 5, 20, 19, 30, 26, 34, 13, 29, 12, 82, 24, 27, 28, 56, 78, 25, 52, "ukn"],
     "valid_bond_types": ["NONE", "SINGLE", "DOUBLE", "TRIPLE", "AROMATIC", "ukn"]
