@@ -8,4 +8,4 @@
 
 set -x
 
-srun prepare_data.py
+srun python prepare_data.py
