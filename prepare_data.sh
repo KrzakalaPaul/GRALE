@@ -5,6 +5,7 @@
 #SBATCH --time=24:00:00
 #SBATCH --partition=CPU
 #SBATCH --gpus=0
+#SBATCH --cpus-per-task=32
 
 set -x
 

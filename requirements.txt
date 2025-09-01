@@ -4,3 +4,6 @@ lightning
 scipy
 torch
 wandb
+pandas
+rdkit
+scikit-learn
