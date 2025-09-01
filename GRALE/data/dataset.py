@@ -3,7 +3,7 @@ import h5py
 from torch.utils.data import Dataset   
 import torch
 from .dense_data import DenseData, BatchedDenseData
-import pytorch_lightning as pl
+import lightning.pytorch as pl
 from torch.utils.data import DataLoader
 
 def concat_data(data1, data2):

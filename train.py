@@ -1,10 +1,10 @@
-import pytorch_lightning as pl
 from GRALE.data.dataset import DataModule
 from GRALE.main import GRALE_model
 import argparse
 import os
 import yaml
 from lightning.pytorch.loggers import WandbLogger
+import lightning.pytorch as pl
 
 def get_config():
     parser = argparse.ArgumentParser()

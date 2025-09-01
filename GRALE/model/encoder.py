@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch
 from GRALE.data import BatchedDenseData
-from .utils import MLP, GIN, flatten_upper_diagonal, SineEmbedding, build_E_from_X, pad_node_embeddings, build_laplacian_node_pos
+from .utils import MLP, flatten_upper_diagonal, SineEmbedding, build_E_from_X, pad_node_embeddings, build_laplacian_node_pos
 from GRALE.attention import EvoformerEncoder, TransformerDecoder, TransformerEncoder, mask_nodes_to_edges
 from functools import partial
 from abc import abstractmethod

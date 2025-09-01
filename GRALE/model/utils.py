@@ -1,6 +1,5 @@
 import torch.nn as nn
 import torch
-from torch_geometric.nn.dense import DenseGINConv
 
 class MLP(nn.Module):
     '''
@@ -37,15 +36,6 @@ class MLP_head(nn.Module):
                                     nn.Linear(hidden_dim, out_dim))
     def forward(self, x):
         return self.mlp(x)
-    
-class GIN(nn.Module):
-    def __init__(self, model_dim, hidden_dim, n_layers, dropout = 0):
-        super().__init__()
-        self.layers = nn.ModuleList([DenseGINConv(MLP(model_dim, hidden_dim, model_dim, dropout)) for _ in range(n_layers)])
-    def forward(self, x, A):
-        for layer in self.layers:
-            x = layer(x, A)
-        return x
         
 class SineEmbedding(nn.Module):
     '''

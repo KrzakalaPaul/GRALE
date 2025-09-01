@@ -4,7 +4,7 @@ import yaml
 from .loss.objective import GraphAutoencoderObjective, GraphAutoencoderMetric
 from .model import get_encoder, get_decoder, get_matcher, get_target_builder, get_input_builder
 from GRALE.data import BatchedDenseData
-import pytorch_lightning as pl
+import lightning.pytorch as pl
 from torch.optim.lr_scheduler import LambdaLR
 import numpy as np
 
