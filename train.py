@@ -39,9 +39,10 @@ def get_trainer(config, run_name):
         accelerator="gpu",  # or "auto"
         devices=1,
         max_steps=config['n_grad_steps'],
-        log_every_n_steps=1,
         gradient_clip_val=config['max_grad_norm'],  
-        gradient_clip_algorithm="norm"
+        gradient_clip_algorithm="norm",
+        log_every_n_steps=100,
+        reload_dataloaders_every_n_epochs=1
     )
     return trainer
 

@@ -3,7 +3,7 @@
 - Add Trainer [x]
 - Add lr scheduling and gradient clipping [x]
 - Make a nice train.py [x]
-- Run local
+- Run local [x]
 - Run cluser []
 - Add mixed-precision option []
 - Add multi-gpu []

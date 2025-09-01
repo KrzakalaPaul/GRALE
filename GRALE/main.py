@@ -43,7 +43,9 @@ class GRALE_model(pl.LightningModule):
         self.log_dict(log_loss, on_epoch=True, batch_size=inputs.batchsize)
         lr = self.trainer.optimizers[0].param_groups[0]['lr']
         self.log("lr", lr, prog_bar=False, on_step=True, on_epoch=False)
-    
+
+        return loss.mean()
+        
     def validation_step(self, batch: BatchedDenseData):
         
         # Prepare inputs and targets
@@ -67,6 +69,8 @@ class GRALE_model(pl.LightningModule):
 
         # Log metrics
         self.log_dict(log_metric, on_epoch=True, batch_size=inputs.batchsize)
+    
+        return metric.mean()
 
     def encode(self, data: BatchedDenseData):
         '''

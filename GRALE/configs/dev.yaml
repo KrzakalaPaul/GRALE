@@ -1,11 +1,11 @@
 # Loss weights:
-alpha_adjacency: 0.2
-alpha_edge_features: 0.1
-alpha_edge_labels: 0.2
+alpha_adjacency: 0 # 0.2
+alpha_edge_features: 0 # 0.1
+alpha_edge_labels: 0 # 0.2
 alpha_h: 1
 alpha_marginals: 1
-alpha_node_features: 0.1
-alpha_node_labels: 1
+alpha_node_features: 0.1 # 0.1
+alpha_node_labels: 1 # 1
 # Training:
 weight_decay: 0
 base_lr: 0.0001
