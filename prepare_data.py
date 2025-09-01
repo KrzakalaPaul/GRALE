@@ -1,7 +1,11 @@
 from datasets.molecules.PUBCHEM import download_PUBCHEM, process_PUBCHEM
 import json
-
+import os 
 def main():
+    os.makedirs("data", exist_ok=True)
+    os.makedirs("data/h5", exist_ok=True)
+    os.makedirs("data/raw", exist_ok=True)
+    
     # Download datasets
     download_PUBCHEM()
 
