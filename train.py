@@ -29,15 +29,25 @@ def get_data(config):
     )
     return datamodule
 
+def get_num_gpus():
+    # USE
+    if "SLURM_GPUS_ON_NODE" in os.environ:
+        return int(os.environ.get("SLURM_GPUS_ON_NODE"))
+    # Fallback: SLURM var
+    return 1
+
 def get_trainer(config, run_name):
     logger = WandbLogger(project="GRALE", 
                          name=run_name,
                          save_dir="logs",
                          tags=[])
+    n_gpus = get_num_gpus()
+    print(f"Using {n_gpus} GPUs")
     trainer = pl.Trainer(
         logger=logger,
         accelerator="gpu",  # or "auto"
-        devices=1,
+        devices=n_gpus,
+        strategy="ddp" if n_gpus > 1 else "auto",
         max_steps=config['n_grad_steps'],
         gradient_clip_val=config['max_grad_norm'],  
         gradient_clip_algorithm="norm",
