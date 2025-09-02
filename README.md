@@ -7,7 +7,7 @@
 - Run cluser [x]
 - Add multi-gpu [x]
 - Add requirement.txt [x]
-- Add checkpointing []
+- Add checkpointing [x]
 - Add vizualization notebook []
 - Add mixed-precision option []
 - Make a nice README []

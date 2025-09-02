@@ -3,13 +3,14 @@ from GRALE.main import GRALE_model
 import argparse
 import os
 import yaml
+from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.loggers import WandbLogger
 import lightning.pytorch as pl
 
 def get_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', type=str, default='dev16')
-    parser.add_argument('--run_name', type=str, default='dev')
+    parser.add_argument('--config', type=str, default='dev')
+    parser.add_argument('--run_name', type=str, default='default_run')
     args = parser.parse_args()
     config = yaml.safe_load(open(f'GRALE/configs/{args.config}.yaml', 'r'))
     run_name = args.run_name
@@ -21,9 +22,10 @@ def get_model(config):
 
 def get_data(config):
     path_h5 = 'data/h5/PUBCHEM_16.h5'
+    n_gpus = get_num_gpus()
     datamodule = DataModule(
         path_h5=path_h5,
-        batch_size=config['batchsize'],
+        batch_size=int(config['batchsize_effective']/n_gpus),
         n_data_epoch=config['n_data_epoch'],
         n_data_valid=config['n_data_valid']
     )
@@ -37,10 +39,22 @@ def get_num_gpus():
     return 1
 
 def get_trainer(config, run_name):
+    # Get Logger
     logger = WandbLogger(project="GRALE", 
                          name=run_name,
                          save_dir="logs",
                          tags=[])
+    # Define checkpoint callback (with no conflict with logger)
+    # Explicit checkpoint callback
+    checkpoint_cb = ModelCheckpoint(
+        dirpath=f"checkpoints/{run_name}",  # no conflict with logger
+        filename="{epoch}-{edit_graph:.4f}",
+        save_last=True,
+        save_top_k=1,
+        monitor="edit_graph",
+        mode="min",
+    )
+    
     n_gpus = get_num_gpus()
     trainer = pl.Trainer(
         logger=logger,
@@ -51,7 +65,8 @@ def get_trainer(config, run_name):
         gradient_clip_val=config['max_grad_norm'],  
         gradient_clip_algorithm="norm",
         log_every_n_steps=100,
-        reload_dataloaders_every_n_epochs=1
+        reload_dataloaders_every_n_epochs=1,
+        callbacks=[checkpoint_cb]
     )
     return trainer
 
@@ -63,6 +78,7 @@ def main():
     trainer = get_trainer(config, run_name)
     # Train
     trainer.fit(model, datamodule=datamodule)
-
+    print()
+    
 if __name__ == "__main__":
     main()
