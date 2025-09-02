@@ -2,7 +2,7 @@
 
 #SBATCH --output=logs/job%j.log
 #SBATCH --error=logs/job%j.err
-#SBATCH --time=80:00:00
+#SBATCH --time=40:00:00
 #SBATCH --partition=P100
 #SBATCH --gpus=1
 
