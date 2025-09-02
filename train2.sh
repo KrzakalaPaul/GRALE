@@ -8,4 +8,4 @@
 
 set -x
 
-srun python -u train.py --run_name PUBCHEM16_large --config 16_large
+srun python -u train.py --run_name PUBCHEM16_encoder2 --config 16_encoder2

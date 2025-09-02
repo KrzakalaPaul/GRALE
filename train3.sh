@@ -8,4 +8,4 @@
 
 set -x
 
-srun python -u train.py --run_name PUBCHEM16_softsort --config 16_softsort
+srun python -u train.py --run_name PUBCHEM16_decoder2 --config 16_decoder2
