@@ -6,15 +6,22 @@ import yaml
 from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.loggers import WandbLogger
 import lightning.pytorch as pl
+import torch
 
 def get_config():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default='dev')
-    parser.add_argument('--run_name', type=str, default='default_run')
+    parser.add_argument('--run_name', type=str, default='default_name')
+    parser.add_argument('--checkpoint_path', type=str, default=None)
     args = parser.parse_args()
-    config = yaml.safe_load(open(f'GRALE/configs/{args.config}.yaml', 'r'))
+    checkpoint_path = args.checkpoint_path
     run_name = args.run_name
-    return config, run_name
+    if checkpoint_path is not None:
+        print(f"Resuming from checkpoint: {checkpoint_path}")
+        config = torch.load(checkpoint_path, map_location=lambda storage, loc: storage)["hyper_parameters"]
+    else:
+        config = yaml.safe_load(open(f'GRALE/configs/{args.config}.yaml', 'r'))
+    return config, run_name, checkpoint_path
 
 def get_model(config):
     model = GRALE_model(config=config)
@@ -72,12 +79,12 @@ def get_trainer(config, run_name):
 
 def main():
     # Set up
-    config, run_name = get_config()
+    config, run_name, checkpoint_path = get_config()
     model = get_model(config)
     datamodule = get_data(config)
     trainer = get_trainer(config, run_name)
     # Train
-    trainer.fit(model, datamodule=datamodule)
+    trainer.fit(model, datamodule=datamodule, ckpt_path=checkpoint_path)
     print()
     
 if __name__ == "__main__":

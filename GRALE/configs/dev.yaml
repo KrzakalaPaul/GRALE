@@ -12,8 +12,8 @@ base_lr: 0.0001
 max_grad_norm: 1.
 batchsize_effective: 32
 n_workers: 8
-n_warmup_steps: 100
-n_grad_steps: 200
+n_warmup_steps: 300
+n_grad_steps: 2000
 n_data_epoch: 2000
 n_data_valid: 500
 # Model:
