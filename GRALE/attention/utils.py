@@ -76,7 +76,7 @@ class MultiHeadAttention(nn.Module):
         # Put mask into attn_bias
         if mask is not None:
             attn_bias = torch.zeros(batchsize,1,N,M,device=Q.device,dtype=Q.dtype) if attn_bias is None else attn_bias
-            attn_bias = attn_bias.masked_fill(mask.unsqueeze(-2), -1e9) if mask is not None else attn_bias
+            attn_bias = attn_bias.masked_fill(mask.unsqueeze(-2), -float('inf')) if mask is not None else attn_bias
         
         Q = self.fc_Q(Q)
         K = self.fc_K(K)
@@ -113,7 +113,7 @@ def triangular_self_attention_row(query: Tensor, key: Tensor, value: Tensor, bia
         if bias_col is not None:
             attn = attn + bias_col.unsqueeze(-3) # biais for ijk = trgl_biais_jk
         if mask_edges is not None:
-            attn = attn.masked_fill(mask_edges.unsqueeze(-2), -1e9) # set attn_ijk to -inf if mask_ik = 0
+            attn = attn.masked_fill(mask_edges.unsqueeze(-2), -float('inf')) # set attn_ijk to -inf if mask_ik = 0
         attn = attn.softmax(-1)
         attn = F.dropout(attn, dropout) if dropout > 0 else attn
         output = torch.einsum('bhijk,bhikd->bhijd', attn, value) 
@@ -135,7 +135,7 @@ def triangular_self_attention_col(query: Tensor, key: Tensor, value: Tensor, bia
             attn = attn + triag_biais.unsqueeze(-2) # biais for ijk = trgl_biais_ki
         if mask_edges is not None:
             mask_edges = mask_edges.transpose(-2,-1)
-            attn = attn.masked_fill(mask_edges.unsqueeze(-3), -1e9) # set attn_ijk to -inf if mask_kj = 0
+            attn = attn.masked_fill(mask_edges.unsqueeze(-3), -float('inf')) # set attn_ijk to -inf if mask_kj = 0
         attn = attn.softmax(-1)
         attn = F.dropout(attn, dropout) if dropout > 0 else attn
         output = torch.einsum('bhijk,bhkjd->bhijd', attn, value) 
@@ -338,7 +338,7 @@ if __name__=='__main__':
     mask_nodes[masked1] = True
     mask_nodes = mask_nodes.unsqueeze(0).repeat(batchsize,1)
     attn_bias = torch.zeros(batchsize, n_nodes, n_nodes, dtype=torch.float)
-    attn_bias[:,i,masked2] = -1e9
+    attn_bias[:,i,masked2] = -float('inf')
     X = torch.rand(batchsize, n_nodes, model_dim, requires_grad=True)
     model = MultiHeadAttention(model_dim, model_dim, model_dim, n_heads)
     out = model(X, X, X, mask = mask_nodes,attn_bias=attn_bias)

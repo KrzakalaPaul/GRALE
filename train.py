@@ -10,8 +10,8 @@ import torch
 
 def get_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', type=str, default='dev')
-    parser.add_argument('--run_name', type=str, default='default_name')
+    parser.add_argument('--config', type=str, default='16_large')
+    parser.add_argument('--run_name', type=str, default='pubchem16_large_base')
     parser.add_argument('--checkpoint_path', type=str, default=None)
     args = parser.parse_args()
     checkpoint_path = args.checkpoint_path
@@ -73,7 +73,8 @@ def get_trainer(config, run_name):
         gradient_clip_algorithm="norm",
         log_every_n_steps=100,
         reload_dataloaders_every_n_epochs=1,
-        callbacks=[checkpoint_cb]
+        callbacks=[checkpoint_cb],
+        precision=config["precision"]
     )
     return trainer
 

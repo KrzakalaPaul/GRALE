@@ -10,10 +10,10 @@ alpha_node_labels: 1 # 1
 weight_decay: 0
 base_lr: 0.0001
 max_grad_norm: 1.
-batchsize_effective: 128
+batchsize_effective: 64
 n_workers: 8
-n_warmup_steps: 2000
-n_grad_steps: 700000
+n_warmup_steps: 4000
+n_grad_steps: 300000
 n_data_epoch: 256000
 n_data_valid: 8000
 precision: "16-mixed"
@@ -21,20 +21,20 @@ precision: "16-mixed"
 matcher_model: sinkhorn
 encoder_model: evoformer
 decoder_model: evoformer
-n_layers: 5
+n_layers: 4
 n_heads: 4
 norm_post_or_pre: pre
 triangular_attention_mode: none
 triangular_multiplication_mode: row
 # Node dimensions:
-node_hidden_dim: 128
-node_model_dim: 128
+node_hidden_dim: 256
+node_model_dim: 256
 node_pos_dim: 16
 node_labels_dim: 32
 node_features_dim: 32
 # Edge dimensions:
 edge_hidden_dim: null
-edge_model_dim: 64
+edge_model_dim: 128
 edge_pos_dim: 16
 edge_labels_dim: 6
 edge_features_dim: 1
