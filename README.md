@@ -8,6 +8,6 @@
 - Add multi-gpu [x]
 - Add requirement.txt [x]
 - Add checkpointing [x]
-- Add vizualization notebook []
+- Add vizualization notebook [x]
 - Add mixed-precision option []
 - Make a nice README []

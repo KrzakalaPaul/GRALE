@@ -69,9 +69,8 @@ class GRALE_model(pl.LightningModule):
 
         # Log metrics
         self.log_dict(log_metric, on_epoch=True, batch_size=inputs.batchsize, sync_dist=True)
-        val_loss = metric.mean()
-        self.log("val_loss", val_loss, prog_bar=True, on_step=False, on_epoch=True, sync_dist=True, batch_size=inputs.batchsize)
-        return val_loss
+
+        return metric.mean()
 
     def encode(self, data: BatchedDenseData):
         '''
