@@ -11,3 +11,5 @@
 - Add vizualization notebook [x]
 - Add mixed-precision option [x]
 - Make a nice README []
+
+![GRALE Figure](GRALE_fig.png)
