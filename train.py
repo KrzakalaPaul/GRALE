@@ -10,8 +10,8 @@ import torch
 
 def get_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', type=str, default='16_large')
-    parser.add_argument('--run_name', type=str, default='pubchem16_large_base')
+    parser.add_argument('--config', type=str, default='16_base')
+    parser.add_argument('--run_name', type=str, default='16_base_test')
     parser.add_argument('--checkpoint_path', type=str, default=None)
     args = parser.parse_args()
     checkpoint_path = args.checkpoint_path

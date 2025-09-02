@@ -10,17 +10,17 @@ alpha_node_labels: 1 # 1
 weight_decay: 0
 base_lr: 0.0001
 max_grad_norm: 1.
-batchsize_effective: 32
+batchsize_effective: 128
 n_workers: 8
-n_warmup_steps: 300
-n_grad_steps: 2000
-n_data_epoch: 2000
-n_data_valid: 500
+n_warmup_steps: 2000
+n_grad_steps: 700000
+n_data_epoch: 256000
+n_data_valid: 8000
 precision: "32"
 # Model:
-matcher_model: softsort
+matcher_model: sinkhorn
 encoder_model: evoformer
-decoder_model: evoformer
+decoder_model: evoformer2
 n_layers: 5
 n_heads: 4
 norm_post_or_pre: pre
@@ -52,3 +52,4 @@ fixed_n_iters_sinkhorn: true
 dropout_attn: 0.0
 dropout_mlp: 0.0
 dropout_skip: 0.0
+
