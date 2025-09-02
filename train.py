@@ -8,7 +8,7 @@ import lightning.pytorch as pl
 
 def get_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', type=str, default='dev')
+    parser.add_argument('--config', type=str, default='dev16')
     parser.add_argument('--run_name', type=str, default='dev')
     args = parser.parse_args()
     config = yaml.safe_load(open(f'GRALE/configs/{args.config}.yaml', 'r'))
@@ -20,7 +20,7 @@ def get_model(config):
     return model
 
 def get_data(config):
-    path_h5 = 'data/h5/PUBCHEM_dev.h5'
+    path_h5 = 'data/h5/PUBCHEM_16.h5'
     datamodule = DataModule(
         path_h5=path_h5,
         batch_size=config['batchsize'],
@@ -42,7 +42,6 @@ def get_trainer(config, run_name):
                          save_dir="logs",
                          tags=[])
     n_gpus = get_num_gpus()
-    print(f"Using {n_gpus} GPUs")
     trainer = pl.Trainer(
         logger=logger,
         accelerator="gpu",  # or "auto"
@@ -66,7 +65,4 @@ def main():
     trainer.fit(model, datamodule=datamodule)
 
 if __name__ == "__main__":
-    import torch
-    print(torch.cuda.is_available())
-    print(torch.cuda.device_count())
     main()

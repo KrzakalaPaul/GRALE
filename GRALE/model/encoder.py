@@ -64,12 +64,13 @@ class EvoformerGraphEncoder(AbstractGraphEncoder):
         super().__init__()
         
         self.n_nodes_max = n_nodes_max
+        node_pos_dim = min(node_pos_dim, n_nodes_max-1)  # max n_nodes_max-1 non-trivial eigenvectors
         self.positionnal_nodes = partial(build_laplacian_node_pos, n_eigvecs=node_pos_dim)
         self.positionnal_edges = SineEmbedding(edge_pos_dim)
         
         X_dim = node_labels_dim + node_pos_dim
         E_dim = edge_labels_dim + 2*X_dim + edge_pos_dim
-        
+
         self.mlp_nodes = MLP(X_dim, node_hidden_dim, node_model_dim, dropout_mlp)
         self.mlp_edges = MLP(E_dim, edge_hidden_dim, edge_model_dim, dropout_mlp)
         

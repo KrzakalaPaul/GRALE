@@ -40,9 +40,9 @@ edge_labels_dim: 6
 edge_model_dim: 128
 edge_pos_dim: 32
 # Graph dimensions:
-n_nodes_max: 32
-graph_embedding_dim: 64
-graph_embedding_size: 32
+n_nodes_max: 16
+graph_embedding_dim: 128
+graph_embedding_size: 4
 # Matcher
 matcher_dim: 64
 normalize_cost_matrix: true
