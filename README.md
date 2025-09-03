@@ -16,4 +16,6 @@
 - Add checkpointing [x]
 - Add vizualization notebook [x]
 - Add mixed-precision option [x]
-- Make a nice README []
+- Make a nice README [x]
+- Add interpolations to notebook [x]
+- Add masking []

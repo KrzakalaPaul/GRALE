@@ -141,6 +141,12 @@ class BatchedDenseData():
     
     def __len__(self):
         return self.h.shape[0]
+    
+    def __getitem__(self, idx):
+        h = self.h[idx]
+        nodes = {key: self.nodes[key][idx] for key in self.nodes.keys()}
+        edges = {key: self.edges[key][idx] for key in self.edges.keys()}
+        return DenseData(self.size, h, nodes, edges)
 
 ##### ---------------------------- EasyDicts ---------------------------- #####
 # Adapted from https://pypi.org/project/easydict/
