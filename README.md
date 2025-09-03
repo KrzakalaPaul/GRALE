@@ -19,3 +19,5 @@
 - Make a nice README [x]
 - Add interpolations to notebook [x]
 - Add masking []
+- Add variationnal []
+- Add downstream tasks notebooks []
