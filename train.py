@@ -36,7 +36,8 @@ def get_data(config, dataset):
         path_h5=path_h5,
         batch_size=int(config['batchsize_effective']/n_gpus),
         n_data_epoch=config['n_data_epoch'],
-        n_data_valid=config['n_data_valid']
+        n_data_valid=config['n_data_valid'],
+        n_workers=config['n_workers']
     )
     return datamodule
 
