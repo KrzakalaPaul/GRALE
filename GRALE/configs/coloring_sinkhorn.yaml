@@ -31,7 +31,7 @@ node_hidden_dim: 128
 node_model_dim: 128
 node_pos_dim: 16
 node_labels_dim: 4
-node_features_dim: 1
+node_features_dim: 4
 # Edge dimensions:
 edge_hidden_dim: null
 edge_model_dim: 64

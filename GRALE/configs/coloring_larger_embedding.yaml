@@ -37,7 +37,7 @@ edge_hidden_dim: null
 edge_model_dim: 64
 edge_pos_dim: 16
 edge_labels_dim: 2
-edge_features_dim: 1
+node_features_dim: 4
 # Graph dimensions:
 n_nodes_max: 16
 graph_embedding_dim: 64
