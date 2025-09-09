@@ -13,8 +13,8 @@ max_grad_norm: 1.
 batchsize_effective: 128
 n_workers: 8
 n_warmup_steps: 2000
-n_grad_steps: 300000
-n_data_epoch: 100000
+n_grad_steps: 600000
+n_data_epoch: 200000
 n_data_valid: 2000
 precision: "32"
 # Model:

@@ -21,7 +21,7 @@ precision: "32"
 matcher_model: softsort
 encoder_model: evoformer
 decoder_model: evoformer
-n_layers: 3
+n_layers: 5
 n_heads: 4
 norm_post_or_pre: pre
 triangular_attention_mode: none

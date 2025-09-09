@@ -8,4 +8,4 @@
 
 set -x
 
-srun python -u train.py --run_name coloring_larger_embedding --config coloring_larger_embedding
+srun python -u train.py --run_name coloring_sinkhorn --config coloring_sinkhorn

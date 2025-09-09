@@ -18,7 +18,7 @@ n_data_epoch: 100000
 n_data_valid: 2000
 precision: "32"
 # Model:
-matcher_model: softsort
+matcher_model: sinkhorn
 encoder_model: evoformer
 decoder_model: evoformer
 n_layers: 3
