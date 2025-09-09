@@ -35,10 +35,10 @@ class LazyDataset():
         self.lazy_data = h5py.File(path_h5, 'r')[split]
         self.n_data = self.lazy_data[f'node_mask'].shape[0]
         self.n_data_epoch = n_data_epoch
-        n_iters = self.n_data // n_data_epoch + 1
+        n_iters = self.n_data // n_data_epoch 
         print(f"The full {split} dataset is of size {self.n_data}.")
         print(f"Every epoch a chunk of size {self.n_data_epoch} is loaded.")
-        print(f"The entire dataset will be iterated every {n_iters} epochs.")
+        print(f"The entire dataset will be iterated every {n_iters:.1f} epochs.")
         if n_iters < 2:
             print("Consider using fully loading the data for better efficiency.")
         if n_iters > 100:
