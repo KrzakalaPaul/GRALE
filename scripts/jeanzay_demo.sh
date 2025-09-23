@@ -4,7 +4,7 @@
 #SBATCH --error=logs/gpu_mono%j.err       # nom du fichier d'erreur (ici commun avec la sortie)
 #SBATCH -C a100                     # decommenter pour la partition gpu_p5 (GPU A100 80 Go)
 #SBATCH --nodes=1                    # on demande un noeud
-#SBATCH --ntasks-per-node=1          # avec une tache par noeud (= nombre de GPU ici)
+#SBATCH --ntasks-per-node=2          # avec une tache par noeud (= nombre de GPU ici)
 #SBATCH --gres=gpu:2                 # nombre de GPU par noeud (max 8 avec gpu_p2, gpu_p5)
 #SBATCH --cpus-per-task=16           # nombre de CPU par tache pour gpu_p5 
 # /!\ Attention, "multithread" fait reference à l'hyperthreading dans la terminologie Slurm
