@@ -40,9 +40,9 @@ class GRALE_model(pl.LightningModule):
         loss, log_loss = self.training_objective(outputs, targets, permutation_matrices)
 
         # Log metrics
-        self.log_dict(log_loss, on_epoch=True, batch_size=inputs.batchsize)
-        lr = self.trainer.optimizers[0].param_groups[0]['lr']
-        self.log("lr", lr, prog_bar=False, on_step=True, on_epoch=False)
+        # self.log_dict(log_loss, on_epoch=True, batch_size=inputs.batchsize)
+        # lr = self.trainer.optimizers[0].param_groups[0]['lr']
+        # self.log("lr", lr, prog_bar=False, on_step=True, on_epoch=False)
 
         return loss.mean()
         
@@ -69,7 +69,12 @@ class GRALE_model(pl.LightningModule):
 
         # Log metrics
         self.log_dict(log_metric, on_epoch=True, batch_size=inputs.batchsize, sync_dist=True)
-
+        
+        # Also get the training loss for logging
+        permutation_matrices, log_matcher = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = False)
+        loss, log_loss = self.training_objective(outputs, targets, permutation_matrices)
+        self.log_dict(log_loss, on_epoch=True, batch_size=inputs.batchsize, sync_dist=True)
+        
         return metric.mean()
 
     def encode(self, data: BatchedDenseData):

@@ -4,7 +4,7 @@ import argparse
 import os
 import yaml
 from lightning.pytorch.callbacks import ModelCheckpoint
-from lightning.pytorch.loggers import WandbLogger
+from lightning.pytorch.loggers import WandbLogger, CSVLogger
 import lightning.pytorch as pl
 import torch
 
@@ -54,6 +54,8 @@ def get_trainer(config, run_name):
                          name=run_name,
                          save_dir="logs",
                          tags=[])
+    csv_logger = CSVLogger("logs", name=run_name)
+    
     # Define checkpoint callback (with no conflict with logger)
     # Explicit checkpoint callback
     checkpoint_cb = ModelCheckpoint(
@@ -67,7 +69,7 @@ def get_trainer(config, run_name):
     
     n_gpus = get_num_gpus()
     trainer = pl.Trainer(
-        logger=logger,
+        logger=[logger, csv_logger],
         accelerator="gpu",  # or "auto"
         devices=n_gpus,
         strategy="ddp" if n_gpus > 1 else "auto",
