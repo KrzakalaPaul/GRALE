@@ -68,6 +68,7 @@ def get_trainer(config, run_name):
     )
     
     n_gpus = get_num_gpus()
+    print(f"Using {n_gpus} GPUs")
     trainer = pl.Trainer(
         logger=[logger, csv_logger],
         accelerator="gpu",  # or "auto"
@@ -91,7 +92,6 @@ def main():
     trainer = get_trainer(config, run_name)
     # Train
     trainer.fit(model, datamodule=datamodule, ckpt_path=checkpoint_path)
-    print()
-    
+
 if __name__ == "__main__":
     main()

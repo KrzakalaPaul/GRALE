@@ -7,6 +7,7 @@ from GRALE.data import BatchedDenseData
 import lightning.pytorch as pl
 from torch.optim.lr_scheduler import LambdaLR
 import numpy as np
+import time
 
 class GRALE_model(pl.LightningModule):
     
@@ -21,6 +22,7 @@ class GRALE_model(pl.LightningModule):
         self.training_objective = GraphAutoencoderObjective(get_alpha(config))
         self.validation_metric = GraphAutoencoderMetric()
         self.save_hyperparameters(config)
+        self.total_train_time = 0.0
         
     def training_step(self, batch: BatchedDenseData):
         
@@ -74,9 +76,9 @@ class GRALE_model(pl.LightningModule):
         permutation_matrices, log_matcher = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = False)
         loss, log_loss = self.training_objective(outputs, targets, permutation_matrices)
         self.log_dict(log_loss, on_epoch=True, batch_size=inputs.batchsize, sync_dist=True)
-        
-        return metric.mean()
 
+        return metric.mean()
+        
     def encode(self, data: BatchedDenseData):
         '''
         Returns only the graph embedding from the encoder
