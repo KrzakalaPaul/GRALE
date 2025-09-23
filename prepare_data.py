@@ -10,7 +10,7 @@ def PUBCHEM():
 
     # Download datasets
     download_PUBCHEM()
-
+    '''
     # Process a small version for development
     config = json.load(open("datasets/molecules/configs/dev.json"))
     process_PUBCHEM(config, dev=True)
@@ -18,7 +18,7 @@ def PUBCHEM():
     # Process a version with only molecules up to 16 atoms
     config = json.load(open("datasets/molecules/configs/16.json"))
     process_PUBCHEM(config, dev=False)
-
+    '''
     # Process a version with only molecules up to 32 atoms
     config = json.load(open("datasets/molecules/configs/32.json"))
     process_PUBCHEM(config, dev=False)
