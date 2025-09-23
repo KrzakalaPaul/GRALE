@@ -22,7 +22,15 @@ class GRALE_model(pl.LightningModule):
         self.training_objective = GraphAutoencoderObjective(get_alpha(config))
         self.validation_metric = GraphAutoencoderMetric()
         self.save_hyperparameters(config)
-        self.total_train_time = 0.0
+    
+    def on_train_epoch_start(self):
+        self.epoch_start_time = time.time()
+
+    def on_train_epoch_end(self):
+        epoch_time = time.time() - self.epoch_start_time
+        steps_per_sec = self.trainer.num_training_batches / epoch_time
+        # log with on_step=False, on_epoch=True to merge with other epoch metrics
+        self.log("steps_per_sec", steps_per_sec, on_step=False, on_epoch=True, prog_bar=True)
         
     def training_step(self, batch: BatchedDenseData):
         

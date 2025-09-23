@@ -7,6 +7,7 @@ from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.loggers import WandbLogger, CSVLogger
 import lightning.pytorch as pl
 import torch
+import time
 
 def get_config():
     parser = argparse.ArgumentParser()
@@ -55,7 +56,7 @@ def get_trainer(config, run_name):
                          save_dir="logs",
                          tags=[])
     csv_logger = CSVLogger("logs", name=run_name)
-    
+
     # Define checkpoint callback (with no conflict with logger)
     # Explicit checkpoint callback
     checkpoint_cb = ModelCheckpoint(

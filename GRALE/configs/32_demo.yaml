@@ -10,11 +10,11 @@ alpha_node_labels: 1 # 1
 weight_decay: 0
 base_lr: 0.0001
 max_grad_norm: 1.
-batchsize_effective: 256
+batchsize_effective: 8
 n_workers: 8
 n_warmup_steps: 8000
 n_grad_steps: 1500000
-n_data_epoch: 2560
+n_data_epoch: 500
 n_data_valid: 160
 precision: "32"
 # Model:
