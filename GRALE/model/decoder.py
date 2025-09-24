@@ -211,11 +211,14 @@ class EvoformerGraphDecoderV2(AbstractGraphDecoder):
     
 import inspect
 def get_decoder(config):
-    decoder_model = config.pop('decoder_model') 
+    decoder_model = config.get('decoder_model') 
     if decoder_model == 'evoformer':
         DecoderClass = EvoformerGraphDecoder
     elif decoder_model == 'evoformer2':
         DecoderClass = EvoformerGraphDecoderV2
+    else:
+        print("Warning: decoder_model not recognized, using 'evoformer' by default.")
+        DecoderClass = EvoformerGraphDecoder
     params = inspect.signature(DecoderClass).parameters
     valid_args = {k: v for k, v in config.items() if k in params}
     return DecoderClass(**valid_args)

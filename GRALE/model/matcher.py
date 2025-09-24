@@ -156,10 +156,13 @@ class SoftsortMatcher(AbstractMatcher):
         
 import inspect
 def get_matcher(config):
-    matcher_model = config.pop('matcher_model')
+    matcher_model = config.get('matcher_model')
     if matcher_model == 'softsort':
         MatcherClass = SoftsortMatcher
     elif matcher_model == 'sinkhorn':
+        MatcherClass = SinkhornMatcher
+    else:
+        print("Warning: matcher_model not recognized, using 'sinkhorn' by default.")
         MatcherClass = SinkhornMatcher
     params = inspect.signature(MatcherClass).parameters
     valid_args = {k: v for k, v in config.items() if k in params}

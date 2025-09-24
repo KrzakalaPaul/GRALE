@@ -269,11 +269,15 @@ class EvoformerGraphEncoderV2(AbstractGraphEncoder):
     
 import inspect
 def get_encoder(config):
-    encoder_model = config.pop('encoder_model')
+    encoder_model = config.get('encoder_model')
+    print(config)
     if encoder_model == 'evoformer':
         EncoderClass = EvoformerGraphEncoder
     elif encoder_model == 'evoformer2':
         EncoderClass = EvoformerGraphEncoderV2
+    else:
+        print("Warning: encoder_model not recognized, using 'evoformer' by default.")
+        EncoderClass = EvoformerGraphEncoder
     params = inspect.signature(EncoderClass).parameters
     valid_args = {k: v for k, v in config.items() if k in params}
     return EncoderClass(**valid_args)
