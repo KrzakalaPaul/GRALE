@@ -11,9 +11,9 @@ import time
 
 def get_config():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', type=str, default='32')
-    parser.add_argument('--run_name', type=str, default='32_test')
-    parser.add_argument('--dataset', type=str, default='PUBCHEM_32')
+    parser.add_argument('--config', type=str, default='masking/16_masking_0')
+    parser.add_argument('--run_name', type=str, default='16_base2_test')
+    parser.add_argument('--dataset', type=str, default='PUBCHEM_16')
     parser.add_argument('--checkpoint_path', type=str, default=None)
     args = parser.parse_args()
     checkpoint_path = args.checkpoint_path

@@ -270,7 +270,6 @@ class EvoformerGraphEncoderV2(AbstractGraphEncoder):
 import inspect
 def get_encoder(config):
     encoder_model = config.get('encoder_model')
-    print(config)
     if encoder_model == 'evoformer':
         EncoderClass = EvoformerGraphEncoder
     elif encoder_model == 'evoformer2':
@@ -280,4 +279,7 @@ def get_encoder(config):
         EncoderClass = EvoformerGraphEncoder
     params = inspect.signature(EncoderClass).parameters
     valid_args = {k: v for k, v in config.items() if k in params}
+    if config['mask_rate'] > 0:
+        valid_args['edge_labels_dim'] += 1  # add one dimension for the mask label
+        valid_args['node_labels_dim'] += 1  # add one dimension for the mask label
     return EncoderClass(**valid_args)

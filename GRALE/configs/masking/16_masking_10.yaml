@@ -1,0 +1,56 @@
+# Loss weights:
+alpha_adjacency: 0.2 # 0.2
+alpha_edge_features: 0.1 # 0.1
+alpha_edge_labels: 0.2 # 0.2
+alpha_h: 1
+alpha_marginals: 1
+alpha_node_features: 0.1 # 0.1
+alpha_node_labels: 1 # 1
+# Training:
+weight_decay: 0
+base_lr: 0.0001
+max_grad_norm: 1.
+batchsize_effective: 128
+n_workers: 8
+n_warmup_steps: 2000
+n_grad_steps: 700000
+n_data_epoch: 256000
+n_data_valid: 8000
+precision: "32"
+# Model:
+matcher_model: softsort
+encoder_model: evoformer
+decoder_model: evoformer
+n_layers: 5
+n_heads: 4
+norm_post_or_pre: pre
+triangular_attention_mode: none
+triangular_multiplication_mode: row
+# Node dimensions:
+node_hidden_dim: 256
+node_model_dim: 256
+node_pos_dim: 16
+node_labels_dim: 32
+node_features_dim: 32
+# Edge dimensions:
+edge_hidden_dim: 64
+edge_model_dim: 64
+edge_pos_dim: 16
+edge_labels_dim: 6
+edge_features_dim: 1
+# Graph dimensions:
+n_nodes_max: 16
+graph_embedding_dim: 128
+graph_embedding_size: 1
+# Matcher
+matcher_dim: 32
+normalize_cost_matrix: true
+max_iter_sinkhorn: 50
+epsilon: 0.0001
+fixed_n_iters_sinkhorn: true
+# Dropout
+dropout_attn: 0.0
+dropout_mlp: 0.0
+dropout_skip: 0.0
+# Masking
+mask_rate: 0.10

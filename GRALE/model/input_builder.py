@@ -54,6 +54,9 @@ class MaskingInputBuilder(AbstractInputBuilder):
         
     def forward(self, data: BatchedDenseData):
         
+        # Clone data to avoid modifying the original data
+        data = data.clone()
+        
         # Pad to n_nodes_max
         size = data.size
         batchsize = data.batchsize
@@ -61,7 +64,7 @@ class MaskingInputBuilder(AbstractInputBuilder):
             data.pad_(self.n_nodes_max)
         
         # Randomly mask nodes, edge (i,j) is masked if either node i or j is masked
-        not_masked_node = torch.rand(batchsize, size) > self.node_masking_ratio
+        not_masked_node = torch.rand(batchsize, size, device=data.h.device) > self.node_masking_ratio
         not_masked_edge = not_masked_node.unsqueeze(1) * not_masked_node.unsqueeze(2) # 
         
         # If a node is masked its labels are set to a new "masked" label (add a new dimension to the one-hot encoding and set it to 1)
@@ -85,4 +88,8 @@ class MaskingInputBuilder(AbstractInputBuilder):
         return data
     
 def get_input_builder(config):
+    if "mask_rate" in config:
+        if config['mask_rate'] > 0:
+            return MaskingInputBuilder(config['n_nodes_max'], node_masking_ratio=config['mask_rate'])
+        print("Warning: mask_rate <= 0, using BasicInputBuilder")
     return BasicInputBuilder(config['n_nodes_max'])
