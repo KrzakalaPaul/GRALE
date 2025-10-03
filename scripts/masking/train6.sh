@@ -8,4 +8,4 @@
 
 set -x
 
-srun python -u train.py --run_name masking_10_deeper --config masking/16_masking_10_deeper --dataset PUBCHEM_16
+srun python -u train.py --run_name masking_10_larger --config masking/16_masking_10_larger --dataset PUBCHEM_16
