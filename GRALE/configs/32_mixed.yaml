@@ -52,4 +52,3 @@ fixed_n_iters_sinkhorn: true
 dropout_attn: 0.0
 dropout_mlp: 0.0
 dropout_skip: 0.0
-
