@@ -13,25 +13,24 @@ def get_config():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, default='masking/16_masking_0')
     parser.add_argument('--run_name', type=str, default='16_base2_test')
-    parser.add_argument('--dataset', type=str, default='PUBCHEM_16')
+    parser.add_argument('--dataset_path', type=str, default='data/h5/PUBCHEM_32.h5')
     parser.add_argument('--checkpoint_path', type=str, default=None)
     args = parser.parse_args()
     checkpoint_path = args.checkpoint_path
     run_name = args.run_name
-    dataset = args.dataset
+    path_h5 = args.dataset_path
     if checkpoint_path is not None:
         print(f"Resuming from checkpoint: {checkpoint_path}")
         config = torch.load(checkpoint_path, map_location=lambda storage, loc: storage)["hyper_parameters"]
     else:
         config = yaml.safe_load(open(f'GRALE/configs/{args.config}.yaml', 'r'))
-    return config, run_name, dataset, checkpoint_path
+    return config, run_name, path_h5, checkpoint_path
 
 def get_model(config):
     model = GRALE_model(config=config)
     return model
 
-def get_data(config, dataset):
-    path_h5 = f'data/h5/{dataset}.h5'
+def get_data(config, path_h5):
     n_gpus = get_num_gpus()
     datamodule = DataModule(
         path_h5=path_h5,
@@ -87,9 +86,10 @@ def get_trainer(config, run_name):
 
 def main():
     # Set up
-    config, run_name, dataset, checkpoint_path = get_config()
+    config, run_name, path_h5, checkpoint_path = get_config()
+    # path_h5 = f'data/h5/{dataset}.h5'
     model = get_model(config)
-    datamodule = get_data(config, dataset)
+    datamodule = get_data(config, path_h5)
     trainer = get_trainer(config, run_name)
     # Train
     trainer.fit(model, datamodule=datamodule, ckpt_path=checkpoint_path)

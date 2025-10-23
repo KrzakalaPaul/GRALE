@@ -21,4 +21,4 @@ set -x # activer l’echo des commandes
 # activation du mode offline
 export WANDB_MODE=offline
 
-srun python -u train.py --run_name demo --dataset PUBCHEM_32 --config 32_demo
+srun python -u train.py --run_name demo --dataset_path $SCRATCH/PUBCHEM_32.h5 --config 32_bottleneck
