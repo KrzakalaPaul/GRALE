@@ -193,9 +193,12 @@ class DataModule(pl.LightningDataModule):
         if self.lazy:
             data_epoch = self.dataset_train.get_data_epoch()
             dataset_epoch = InMemoryDataset(data_epoch, self.metadata)
-            return DataLoader(dataset_epoch, batch_size=self.batch_size, shuffle=True, collate_fn=custom_collate_fn, num_workers=self.n_workers)
+            return DataLoader(dataset_epoch, batch_size=self.batch_size, shuffle=True, collate_fn=custom_collate_fn, num_workers=self.n_workers,
+                              pin_memory=True, non_blocking=True, prefetch_factor=2)
         else:
-            return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True, collate_fn=custom_collate_fn, num_workers=self.n_workers)
+            return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True, collate_fn=custom_collate_fn, num_workers=self.n_workers,
+                              pin_memory=True, non_blocking=True, prefetch_factor=2)
 
     def val_dataloader(self):
-        return DataLoader(self.dataset_valid, batch_size=self.batch_size, shuffle=False, collate_fn=custom_collate_fn, num_workers=self.n_workers)
+        return DataLoader(self.dataset_valid, batch_size=self.batch_size, shuffle=False, collate_fn=custom_collate_fn, num_workers=self.n_workers,
+                          pin_memory=True, non_blocking=True, prefetch_factor=2)
