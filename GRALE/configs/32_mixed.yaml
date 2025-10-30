@@ -16,7 +16,7 @@ n_warmup_steps: 8000
 n_grad_steps: 1500000
 n_data_epoch: 256000
 n_data_valid: 16000
-precision: 16-mixed
+precision: 32-true
 # Model:
 matcher_model: sinkhorn
 encoder_model: evoformer
