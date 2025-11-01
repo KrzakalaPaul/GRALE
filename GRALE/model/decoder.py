@@ -105,6 +105,7 @@ class EvoformerGraphDecoder(AbstractGraphDecoder):
         node_embeddings = self.head_node_embeddings(X)
         node_labels = self.head_node_labels(X)
         node_features = self.head_node_features(X)
+        E = (E + E.transpose(1,2))/2  # Symmetrize edge representations
         A = self.head_A(E).squeeze(-1)
         edge_labels = self.head_edge_labels(E)
         edge_features = self.head_edge_features(E)

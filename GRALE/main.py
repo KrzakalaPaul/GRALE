@@ -2,7 +2,7 @@ import torch
 import os
 import yaml
 from .loss.objective import GraphAutoencoderObjective, GraphAutoencoderMetric
-from .model import get_encoder, get_decoder, get_matcher, get_target_builder, get_input_builder
+from .model import get_encoder, get_decoder, get_matcher, get_target_builder, get_input_builder, PMFGW_solver
 from GRALE.data import BatchedDenseData
 import lightning.pytorch as pl
 from torch.optim.lr_scheduler import LambdaLR
@@ -13,9 +13,9 @@ class GRALE_model(pl.LightningModule):
     
     def __init__(self, config: dict):
         super().__init__()
+        self.solver = PMFGW_solver(get_alpha(config), config)
         self.encoder = get_encoder(config)
         self.decoder = get_decoder(config)
-        self.matcher = get_matcher(config)
         self.target_builder = get_target_builder(config)
         self.input_builder = get_input_builder(config)
         self.n_nodes_max = config['n_nodes_max']
@@ -40,12 +40,13 @@ class GRALE_model(pl.LightningModule):
         node_masks_inputs = ~inputs.h
         
         # Pass encoder and decoder
-        node_embeddings_inputs, graph_embedding = self.encoder(inputs)
-        node_embeddings_outputs, outputs = self.decoder(graph_embedding)
+        _, graph_embedding = self.encoder(inputs)
+        _, outputs = self.decoder(graph_embedding)
         
         # Pass node embeddings to the matcher
-        permutation_matrices, log_matcher = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = False)
-
+        with torch.no_grad():
+            permutation_matrices, log_solver = self.solver(outputs, targets, hard=False)
+        print(log_solver)
         # Compute loss
         loss, log_loss = self.training_objective(outputs, targets, permutation_matrices)
 
@@ -64,11 +65,11 @@ class GRALE_model(pl.LightningModule):
         node_masks_inputs = ~inputs.h
         
         # Pass encoder and decoder
-        node_embeddings_inputs, graph_embedding = self.encoder(inputs)
-        node_embeddings_outputs, outputs = self.decoder(graph_embedding)
+        _, graph_embedding = self.encoder(inputs)
+        _, outputs = self.decoder(graph_embedding)
         
         # Pass node embeddings to the matcher
-        permutation_list, log_matcher = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = True)
+        permutation_list, log_solver = self.solver(outputs, targets, hard=True)
         
         # Align outputs to inputs
         aligned_outputs = outputs.clone()
@@ -81,7 +82,7 @@ class GRALE_model(pl.LightningModule):
         self.log_dict(log_metric, on_epoch=True, batch_size=inputs.batchsize, sync_dist=True)
         
         # Also get the training loss for logging
-        permutation_matrices, log_matcher = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = False)
+        permutation_matrices, _ = self.solver(outputs, targets, hard=False)
         loss, log_loss = self.training_objective(outputs, targets, permutation_matrices)
         self.log_dict(log_loss, on_epoch=True, batch_size=inputs.batchsize, sync_dist=True)
 
@@ -111,14 +112,15 @@ class GRALE_model(pl.LightningModule):
         # To "canonize" the input graph, one needs to apply the inverse permutation.
         '''
         inputs = self.input_builder(data)
+        targets = self.target_builder(data)
         node_masks_inputs = ~inputs.h
-        node_embeddings_inputs, graph_embedding = self.encoder(inputs)
-        node_embeddings_outputs, outputs = self.decoder(graph_embedding)
+        _, graph_embedding = self.encoder(inputs)
+        _, outputs = self.decoder(graph_embedding)
         if hard_matcher:
-            permutation_list, _ = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = True)
+            permutation_list, _ = self.solver(outputs, targets, hard=True)
             return permutation_list
         else:
-            permutation_matrices, _ = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = False)
+            permutation_matrices, _ = self.solver(outputs, targets, hard=False)
             return permutation_matrices
     
     def format_logits(self, outputs):
@@ -137,14 +139,15 @@ class GRALE_model(pl.LightningModule):
         The matcher is used to align the output graph to the input graph.
         '''
         inputs = self.input_builder(data)
+        targets = self.target_builder(data)
         node_masks_inputs = ~inputs.h
         node_embeddings_inputs, graph_embedding = self.encoder(inputs)
         node_embeddings_outputs, outputs = self.decoder(graph_embedding)
         if hard_matcher:
-            permutation_list, _ = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = True)
+            permutation_list, _ = self.solver(outputs, targets, hard=True)
             outputs.align_(permutation_list)
         else:
-            permutation_matrices, _ = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = False)
+            permutation_matrices, _ = self.solver(outputs, targets, hard=False)
             outputs.permute_(permutation_matrices)
         if not logits:
             outputs = self.format_logits(outputs)
