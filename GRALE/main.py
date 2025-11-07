@@ -22,6 +22,7 @@ class GRALE_model(pl.LightningModule):
         self.training_objective = GraphAutoencoderObjective(get_alpha(config))
         self.validation_metric = GraphAutoencoderMetric()
         self.save_hyperparameters(config)
+        self.epoch_start_time = 0
     
     def on_train_epoch_start(self):
         self.epoch_start_time = time.time()
