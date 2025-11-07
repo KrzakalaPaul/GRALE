@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=pubchem32_bottleneck_lr          # nom du job
-#SBATCH --output=logs/pubchem32_bottleneck_lr.out      # nom du fichier de sortie
-#SBATCH --error=logs/pubchem32_bottleneck_lr.err       # nom du fichier d'erreur (ici commun avec la sortie)
+#SBATCH --job-name=pubchem32_bottleneck_softsort          # nom du job
+#SBATCH --output=logs/pubchem32_bottleneck_softsort.out      # nom du fichier de sortie
+#SBATCH --error=logs/pubchem32_bottleneck_softsort.err       # nom du fichier d'erreur (ici commun avec la sortie)
 #SBATCH -C h100                     # decommenter pour la partition gpu_p5 (GPU A100 80 Go)
 #SBATCH --nodes=1                    # on demande un noeud
 #SBATCH --ntasks-per-node=4          # avec une tache par noeud (= nombre de GPU ici)
@@ -21,4 +21,4 @@ set -x # activer l’echo des commandes
 # activation du mode offline
 export WANDB_MODE=offline
 
-srun python -u train.py --run_name pubchem32_bottleneck_lr --dataset_path $SCRATCH/PUBCHEM_32.h5 --config bottleneck/smaller_lr
+srun python -u train.py --run_name pubchem32_bottleneck_softsort --dataset_path $SCRATCH/PUBCHEM_32.h5 --config bottleneck/softsort
