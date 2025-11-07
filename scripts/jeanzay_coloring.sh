@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=coloring_big_0          # nom du job
-#SBATCH --output=logs/coloring_big_0.out      # nom du fichier de sortie
-#SBATCH --error=logs/coloring_big_0.err       # nom du fichier d'erreur (ici commun avec la sortie)
+#SBATCH --job-name=coloring_big_base          # nom du job
+#SBATCH --output=logs/coloring_big_base.out      # nom du fichier de sortie
+#SBATCH --error=logs/coloring_big_base.err       # nom du fichier d'erreur (ici commun avec la sortie)
 #SBATCH -C h100                     # decommenter pour la partition gpu_p5 (GPU A100 80 Go)
 #SBATCH --nodes=1                    # on demande un noeud
 #SBATCH --ntasks-per-node=2          # avec une tache par noeud (= nombre de GPU ici)
@@ -11,7 +11,7 @@
 #SBATCH --hint=nomultithread         # hyperthreading desactive
 #SBATCH --time=20:00:00              # temps maximum d'execution demande (HH:MM:SS)
 #SBATCH --account=jmk@h100
-#SBATCH --qos=qos_gpu_h100-dev #decomenter pour 100h mode
+#SBATCH --qos=qos_gpu_h100-t3 #decomenter pour 100h mode
 
 module purge # nettoyer les modules herites par defaut
 module load arch/h100
@@ -21,4 +21,4 @@ set -x # activer l’echo des commandes
 # activation du mode offline
 export WANDB_MODE=offline
 
-srun python -u train.py --run_name coloring_big_0 --dataset_path $SCRATCH/COLORING_big.h5 --config coloring_big
+srun python -u train.py --run_name coloring_big_base --dataset_path $SCRATCH/COLORING_big.h5 --config coloring_big

@@ -21,7 +21,7 @@ precision: "32"
 matcher_model: softsort
 encoder_model: evoformer
 decoder_model: evoformer
-n_layers: 4
+n_layers: 5
 n_heads: 8
 norm_post_or_pre: pre
 triangular_attention_mode: none
@@ -40,8 +40,8 @@ edge_labels_dim: 2
 edge_features_dim: 1
 # Graph dimensions:
 n_nodes_max: 32
-graph_embedding_dim: 256
-graph_embedding_size: 1
+graph_embedding_dim: 128
+graph_embedding_size: 4
 # Matcher
 matcher_dim: 32
 normalize_cost_matrix: true
