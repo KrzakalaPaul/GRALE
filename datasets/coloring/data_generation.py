@@ -33,7 +33,7 @@ def create_coloring_dataset(config):
     
     # Generate samples
     total_size = train_size + valid_size + test_size
-    with Pool(processes=cpu_count()//2) as pool:
+    with Pool(processes=cpu_count()) as pool:
         samples = list(tqdm(pool.imap(sampling_function, [n_min_nodes]*total_size), total=total_size))
     train_samples = samples[:train_size]
     valid_samples = samples[train_size:train_size+valid_size]
