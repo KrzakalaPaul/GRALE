@@ -41,7 +41,7 @@ def coloring_sample(n_min_nodes=2,
                     node_weight_treshold=None,
                     edge_weight_treshold=None,
                     precompute_shortest_paths=False):
-    
+
     # To allow for recursion
     restart = partial(coloring_sample,
                       n_min_nodes=n_min_nodes,
@@ -135,13 +135,14 @@ def coloring_sample(n_min_nodes=2,
     else:
         SP_matrix = None
         
-    graph = {'node_positions': node_positions,
-             'node_weights': node_weights,
-             'node_colors': node_colors,
-             'edge_weights': edge_weights,
-             'adjacency_matrix': adjacency_matrix,
+    graph = {#'node_positions': node_positions.astype(np.float16),
+             #'node_weights': node_weights,
+             'node_colors': node_colors.astype(np.uint8),
+             #'edge_weights': edge_weights,
+             'adjacency_matrix': adjacency_matrix.astype(np.uint8),
              'SP_matrix': SP_matrix}
-        
+    
+    '''
     # Convert to image
     node_colors = np.vstack([colors[coloring[n]] for n in range(n_nodes)])
     img = np.take(node_colors,closest,axis=0)
@@ -149,8 +150,8 @@ def coloring_sample(n_min_nodes=2,
     img += np.random.normal(0,sigma_noise,size=img.shape)
     img = np.clip(img,0,1)
     img = (img*255).astype(np.uint8)
-        
-    return img, graph
+    '''
+    return None, graph
 
 def plot_coloring_img(img,ax,frame=False):
     image = img.astype(np.float32)/255

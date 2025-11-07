@@ -1,0 +1,9 @@
+{
+    "id": "big",
+    "train_size": 600000,
+    "valid_size": 10000,
+    "test_size": 10000,
+    "n_min_nodes": 6,
+    "n_max_nodes": 32,
+    "n_pixels": 64
+}
