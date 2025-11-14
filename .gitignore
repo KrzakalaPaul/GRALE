@@ -5,3 +5,4 @@ checkpoints/*
 lightning_logs
 logs
 wandb
+venv 
