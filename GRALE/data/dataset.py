@@ -189,16 +189,16 @@ class DataModule(pl.LightningDataModule):
         self.n_data_epoch = n_data_epoch
         self.n_workers = n_workers
 
-    def train_dataloader(self):
+    def train_dataloader(self, prefetch_factor=2):
         if self.lazy:
             data_epoch = self.dataset_train.get_data_epoch()
             dataset_epoch = InMemoryDataset(data_epoch, self.metadata)
             return DataLoader(dataset_epoch, batch_size=self.batch_size, shuffle=True, collate_fn=custom_collate_fn, num_workers=self.n_workers,
-                              pin_memory=True, prefetch_factor=2)
+                              pin_memory=True, prefetch_factor=prefetch_factor)
         else:
             return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True, collate_fn=custom_collate_fn, num_workers=self.n_workers,
-                              pin_memory=True, prefetch_factor=2)
+                              pin_memory=True, prefetch_factor=prefetch_factor)
 
-    def val_dataloader(self):
+    def val_dataloader(self, prefetch_factor=2):
         return DataLoader(self.dataset_valid, batch_size=self.batch_size, shuffle=False, collate_fn=custom_collate_fn, num_workers=self.n_workers,
-                          pin_memory=True, prefetch_factor=2)
+                          pin_memory=True, prefetch_factor=prefetch_factor)
