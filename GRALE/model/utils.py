@@ -44,7 +44,7 @@ class SineEmbedding(nn.Module):
     def __init__(self,pos_dim):
         super().__init__()
         assert pos_dim % 2 == 0
-        self.freqs = 1.0 / (10000 ** (torch.arange(0, pos_dim, 2).float() / pos_dim))
+        self.freqs = 1.0 / (10000 ** (torch.arange(0, pos_dim, 2).to(torch.float32) / pos_dim))
     def forward(self, x):
         freqs = self.freqs.to(x.device)
         x = x[..., None] * freqs[None, :]
@@ -121,10 +121,10 @@ def build_random_node_pos(batchsize, n_nodes_batch, n_nodes_max):
 
 
 def build_laplacian_node_pos(A, n_eigvecs):
-    '''
+    '''s
     A: torch.Tensor of shape (batchsize, n_nodes_batch, n_nodes_batch)
     '''
     D = A.sum(dim=-1)
     L = torch.diag_embed(D) - A
-    eigvals, eigvecs = torch.linalg.eigh(L.to(float))
+    eigvals, eigvecs = torch.linalg.eigh(L.to(A.dtype))
     return eigvecs[:, :, 1:n_eigvecs+1] 

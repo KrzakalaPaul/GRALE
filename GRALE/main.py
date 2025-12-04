@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 import os
 import yaml
 from .loss.objective import GraphAutoencoderObjective, GraphAutoencoderMetric
@@ -188,7 +189,6 @@ def get_alpha(config):
     
     
 class GRALE(nn.Module):
-    
     def __init__(self, config: dict):
         super().__init__()
         self.encoder = get_encoder(config)
