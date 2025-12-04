@@ -46,6 +46,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 
 # Install dependencies
+pip install torch==2.8.0 #--index-url https://download.pytorch.org/whl/cu126 (cuda version)
 pip install -r requirements.txt
 ```
 
