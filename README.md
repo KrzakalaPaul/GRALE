@@ -36,6 +36,7 @@ See [demo.ipynb](demo.ipynb) for full examples.
 ## Installation
 
 ```bash
+# Python Version: 3.11.14
 # Clone the repo
 git clone https://github.com/KrzakalaPaul/GRALE.git
 cd GRALE
