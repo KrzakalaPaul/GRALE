@@ -2,7 +2,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2505.22109-B31B1B)](https://arxiv.org/abs/2505.22109)
 [![Model Weights](https://img.shields.io/badge/🤗-Model-yellow)](https://huggingface.co/PaulKrzakala/GRALE-128-32)
-[!NeurIPS 2025](https://neurips.cc/virtual/2025/loc/san-diego/poster/117714)
+[![NeurIPS 2025](https://img.shields.io/badge/NeurIPS-2025-0B6E4F)](https://neurips.cc/virtual/2025/loc/san-diego/poster/117714)
 
 ![GRALE Architecture](GRALE_fig.png)
 
