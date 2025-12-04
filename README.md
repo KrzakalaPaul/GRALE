@@ -1,7 +1,8 @@
 # GRALE: Graph-Level Autoencoder
 
 [![arXiv](https://img.shields.io/badge/arXiv-2505.22109-B31B1B)](https://arxiv.org/abs/2505.22109)
-[![Model](https://img.shields.io/badge/🤗-Model-yellow)](https://huggingface.co/PaulKrzakala/GRALE-128-32)
+[![Model Weights](https://img.shields.io/badge/🤗-Model-yellow)](https://huggingface.co/PaulKrzakala/GRALE-128-32)
+[!NeurIPS 2025](https://neurips.cc/virtual/2025/loc/san-diego/poster/117714)
 
 ![GRALE Architecture](GRALE_fig.png)
 
@@ -29,12 +30,21 @@ See [demo.ipynb](demo.ipynb) for full examples.
 ## Resources
 
 - [Paper](https://arxiv.org/abs/2505.22109)
-- [NeurIPS 2025 Poster](https://neurips.cc/virtual/2025/loc/san-diego/poster/117714)
+- [NeurIPS 2025 Poster](https://neurips.cc/media/PosterPDFs/NeurIPS%202025/117714.png?t=1762354008.229878)
 - [Slides](https://neurips.cc/media/neurips-2025/Slides/117714.pdf)
 
 ## Installation
 
 ```bash
+# Clone the repo
+git clone https://github.com/KrzakalaPaul/GRALE.git
+cd GRALE
+
+# Create your environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
