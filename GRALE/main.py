@@ -187,3 +187,22 @@ def get_alpha(config):
             'marginals': config['alpha_marginals']}
     
     
+class GRALE(nn.Module):
+    
+    def __init__(self, config: dict):
+        super().__init__()
+        self.encoder = get_encoder(config)
+        self.decoder = get_decoder(config)
+        self.matcher = get_matcher(config)
+        self.target_builder = get_target_builder(config)
+        self.input_builder = get_input_builder(config)
+        self.n_nodes_max = config['n_nodes_max']
+        
+    def encode(self, data):
+        inputs = self.input_builder(data)
+        node_embeddings_inputs, graph_embedding = self.encoder(inputs)
+        return graph_embedding
+    
+    def decode(self, graph_embedding):
+        node_embeddings, outputs = self.decoder(graph_embedding)
+        return outputs

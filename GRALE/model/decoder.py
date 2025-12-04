@@ -221,5 +221,4 @@ def get_decoder(config):
         DecoderClass = EvoformerGraphDecoder
     params = inspect.signature(DecoderClass).parameters
     valid_args = {k: v for k, v in config.items() if k in params}
-    print(valid_args)
     return DecoderClass(**valid_args)
