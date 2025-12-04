@@ -1,7 +1,7 @@
 h5py
 imageio
 joblib
-lightning
+lightning==2.5.4
 matplotlib
 networkx
 numpy
@@ -11,6 +11,6 @@ rdkit
 Requests
 scikit_learn
 scipy
-torch
 tqdm
 huggingface_hub
+py3Dmol

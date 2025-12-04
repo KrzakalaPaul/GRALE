@@ -78,7 +78,7 @@ bond_map = {
     "AROMATIC": Chem.BondType.AROMATIC
 }
 
-def graph_to_rdkit(node_labels, edge_labels):
+def graph_to_mol(node_labels, edge_labels, sanitize=True):
     mol = Chem.RWMol()
     atom_indices = []
 
@@ -100,11 +100,14 @@ def graph_to_rdkit(node_labels, edge_labels):
             bond_label = valid_bond_types[bond_label]
             if bond_label in bond_map:
                 mol.AddBond(atom_indices[i], atom_indices[j], bond_map[bond_label])
+    if sanitize:
+        try:
+            Chem.SanitizeMol(mol)
+        except Exception as e:
+            return None
+    return mol
 
-    # --- sanitize & convert ---
-    try:
-        Chem.SanitizeMol(mol)
-    except Exception as e:
-        return None, None
+def graph_to_smiles(node_labels, edge_labels):
+    mol = graph_to_mol(node_labels, edge_labels, sanitize=True)
     smiles = Chem.MolToSmiles(mol)
-    return smiles, mol
+    return smiles
