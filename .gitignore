@@ -1,5 +1,6 @@
 data/raw/*
 data/h5/*
+data/plots/*
 checkpoints/*
 *.pyc
 lightning_logs

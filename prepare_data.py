@@ -28,13 +28,7 @@ def COLORING():
     os.makedirs("data/h5", exist_ok=True)
     os.makedirs("data/raw", exist_ok=True)
 
-    config = json.load(open('datasets/coloring/configs/small.json'))
-    create_coloring_dataset(config)
-    
-    config = json.load(open('datasets/coloring/configs/medium.json'))
-    create_coloring_dataset(config)
-
-    config = json.load(open('datasets/coloring/configs/big.json'))
+    config = json.load(open('datasets/coloring/configs/plots.json'))
     create_coloring_dataset(config)
     
 if __name__ == "__main__":

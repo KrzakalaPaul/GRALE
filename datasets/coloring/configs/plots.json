@@ -1,0 +1,9 @@
+{
+    "id": "plots",
+    "train_size": 10000,
+    "valid_size": 1000,
+    "test_size": 1000,
+    "n_min_nodes": 5,
+    "n_max_nodes": 20,
+    "n_pixels": 64
+}

@@ -30,6 +30,10 @@ def download_PUBCHEM():
         # 2. Decompress .gz into .csv
         with gzip.open(gz_path, "rb") as f_in, open(csv_path, "wb") as f_out:
             shutil.copyfileobj(f_in, f_out, length=1024*1024)  # 1MB buffer
+        # 2.5 Shuffle
+        print("Shuffling PUBCHEM dataset...")
+        # sh.shuf(csv_path, out=csv_path)
+        print("Done.")
         # 3. Remove temporary .gz
         os.remove(gz_path)
         end_time = time.time()
