@@ -8,7 +8,7 @@
 
 ## Overview
 
-GRALE is a novel graph autoencoder that encodes and decodes graphs of varying sizes into a shared embedding space. Built on an Evoformer-based attention architecture (AlphaFold's core component), GRALE uses an Optimal Transport-inspired loss and differentiable node matching to enable general pre-training for diverse downstream tasks—from classification and regression to graph interpolation, editing, matching, and prediction.
+GRALE is a novel graph autoencoder that encodes and decodes graphs of varying sizes into a shared embedding space. Built on an Evoformer-based attention architecture (AlphaFold's core component), GRALE uses an Optimal Transport-inspired loss and differentiable node matching to enable general pre-training for diverse downstream tasks, from classification and regression to graph interpolation, editing, matching, and prediction.
 
 ## Quick Start
 
