@@ -3,6 +3,7 @@ import torch.nn as nn
 import os
 import yaml
 from .loss.objective import GraphAutoencoderObjective, GraphAutoencoderMetric
+from .loss.regularization import Regularization
 from .model import get_encoder, get_decoder, get_matcher, get_target_builder, get_input_builder
 from GRALE.data import BatchedDenseData
 import lightning.pytorch as pl
@@ -21,6 +22,7 @@ class GRALE_model(pl.LightningModule):
         self.input_builder = get_input_builder(config)
         self.n_nodes_max = config['n_nodes_max']
         self.training_objective = GraphAutoencoderObjective(get_alpha(config))
+        self.entropic_reg = Regularization()
         self.validation_metric = GraphAutoencoderMetric()
         self.save_hyperparameters(config)
         self.epoch_start_time = 0
@@ -49,7 +51,10 @@ class GRALE_model(pl.LightningModule):
         permutation_matrices, log_matcher = self.matcher(node_embeddings_inputs, node_masks_inputs, node_embeddings_outputs, hard = False)
 
         # Compute loss
-        loss, log_loss = self.training_objective(outputs, targets, permutation_matrices)
+        outputs.permute_(permutation_matrices)
+        loss, log_loss = self.training_objective(outputs, targets, permutation_matrices=None)
+        loss += self.entropic_reg(targets, permutation_matrices=permutation_matrices)
+
 
         # Log metrics
         # self.log_dict(log_loss, on_epoch=True, batch_size=inputs.batchsize)

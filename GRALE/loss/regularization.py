@@ -33,9 +33,27 @@ class EntropyCols():
     (as close as possible to a permutation matrix)
     '''
     def __call__(self, T, weight_2 = None):
+        T = torch.clamp(T, 1e-9, 1-1e-9)
         H = entr(T)
         H_cols = H.sum(1)
         if weight_2 is not None:
             H_cols = H_cols*weight_2
         H_cols = H_cols.mean(-1)
         return H_cols
+        
+class Regularization():
+    '''
+    Differentiable objective for training graph autoencoders
+    '''
+    
+    def __init__(self):
+        self.regularization = EntropyCols()
+        
+    def __call__(self, targets, permutation_matrices):
+
+        h_targets = targets.h.to(permutation_matrices.dtype)
+        weight = h_targets 
+        
+        loss_regul = self.regularization(T = permutation_matrices, weight_2 = weight)
+        
+        return loss_regul
